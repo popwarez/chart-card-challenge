@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link rel="stylesheet" href="assets/styles.css" />
+
+    <title>Frontend Mentor | Expenses chart component</title>
+  </head>
+  <body>
+    <div id="background-pane">
+      <div id="card-wrapper">
+        <div id="card-header">
+          <div>
+            <span>My balance</span>
+            <h2>$921.48</h2>
+          </div>
+          <div class="circle-logo"></div>
+        </div>
+        <div id="card-main">
+          <h2>Spending - Last 7 days</h2>
+          <div id="chart"></div>
+          <div class="total wrapper">
+            <div class="month">
+              <span>Total this month</span>
+              <h1 id="spend">$478.33</h1>
+            </div>
+            <div class="development">
+              <p>+2.4%</p>
+              <span>from last month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      const init = async () => {
+        await fetch("http://192.168.178.148:8080/data.json")
+          .then((response) => response.json())
+          .then((data) => {
+            // Extract the highest amount so the chart shows a relative overvie over the spendings
+            const highestAmount = Math.max(...data.map((e) => e.amount));
+            data.forEach((e) => {
+              let column = `
+                  <div class='column'>
+                    <div class='body' style="height:${
+                      e.amount * (100 / highestAmount)
+                    }%" title='You spend $${e.amount}'></div>
+                    <span>${e.day}</span>
+                  </div>`;
+              document.getElementById("chart").innerHTML += column;
+            });
+
+            const numbersOnly = data.map((e) => e.amount);
+            const summe = numbersOnly.reduce(
+              (partialSum, a) => partialSum + a,
+              0
+            );
+            document.getElementById("spend").innerHTML = `$${summe}`;
+          });
+      };
+      init();
+    </script>
+  </body>
+</html>
