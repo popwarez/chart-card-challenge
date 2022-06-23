@@ -43,7 +43,9 @@
     </div>
     <script type="text/javascript">
       const init = async () => {
-        await fetch("http://192.168.178.148:8080/data.json")
+        await fetch(
+          "https://popwarez.github.io/chart-card-challenge/lib/data.json"
+        )
           .then((response) => response.json())
           .then((data) => {
             // Extract the highest amount so the chart shows a relative overvie over the spendings
